@@ -78,16 +78,15 @@ ROWS = [
     DIV,
     ("Books:", ORANGE, [J("The Black Swan", "Garden of Lies")]),
     DIV,
-    ("Current.Hypothesis:", PINK, [P("Technology's highest purpose may be to"),
-                                   P("create the conditions in which humans"),
-                                   P("can afford to be more human.")]),
-    DIV,
     ("Long.Game:", YELLOW, [P("Live long enough to die on Mars")]),
 ]
 
 # blocks stacked under the portrait in the left pane
 LEFT_BLOCKS = [
-    ("Status:", GREEN, ["Still curious.", "Still sharpening the stone."]),
+    ("Current.Hypothesis:", PINK, ["Technology's highest purpose may be to",
+                                   "create the conditions in which humans",
+                                   "can afford to be more human."], False),
+    ("Status:", GREEN, ["Still curious.", "Still sharpening the stone."], True),
 ]
 
 # footer laid out 2x2 so each cell gets half the card width
@@ -165,10 +164,11 @@ for i, line in enumerate(art):
     text(PAD, ay + i*A_LH, [(line, ART)], A_FS,
          extra=f' textLength="{LEFT_W:.1f}" lengthAdjust="spacing"')
 py = ay + len(art)*A_LH + 30
-for hdr, hc, lines in LEFT_BLOCKS:
+for hdr, hc, lines, bullet in LEFT_BLOCKS:
     text(PAD, py, [(hdr, hc)], 13.5, "600")
     for i, line in enumerate(lines):
-        text(PAD, py + S_HDR + i*S_LH, [(">  ", DIM), (line, FG)], S_FS)
+        segs = [(">  ", DIM), (line, FG)] if bullet else [(line, FG)]
+        text(PAD, py + S_HDR + i*S_LH, segs, S_FS)
     py += S_HDR + len(lines)*S_LH + S_GAP
 
 # info rows
