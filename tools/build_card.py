@@ -42,6 +42,8 @@ def J(*parts):                                        # join with dim separators
 DIV = (None, None, None)
 
 ROWS = [
+    ("Status:", GREEN, [B("Still curious."), B("Still sharpening the stone.")]),
+    DIV,
     ("Role:",      GREEN, [P("CTO @ Ways2Well + ReviveRX")]),
     ("Home Base:", GREEN, [P("Texas / wherever the airplane lands")]),
     ("Education:", GREEN, [[("Texas A&M ", FG), ("— Mechanical Engineering", DIM)]]),
@@ -82,7 +84,6 @@ ROWS = [
 
 # blocks stacked under the portrait in the left pane
 LEFT_BLOCKS = [
-    ("Status:", GREEN, ["Still curious.", "Still sharpening the stone."], True),
     ("Current.Hypothesis:", PINK, ["Technology's highest purpose may be to",
                                    "create the conditions in which humans",
                                    "can afford to be more human."], False),
