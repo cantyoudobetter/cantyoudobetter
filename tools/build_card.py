@@ -25,11 +25,11 @@ def b(txt, c=FG):           return [(">  ", DIM), (txt, c)]
 def plain(txt, c=FG):       return [(txt, c)]
 
 ROWS = [
-    ("OS:",        GREEN,  [plain("Human 1.0 "), plain("— aggressively upgrading", DIM)]),
+    ("OS:",        GREEN,  [[("Human 1.0 ", FG), ("— aggressively upgrading", DIM)]]),
     ("Role:",      GREEN,  [plain("CTO @ Ways2Well + ReviveRX")]),
     ("Mission:",   GREEN,  [plain("Make humans healthier. Keep technology human.")]),
     ("Home Base:", GREEN,  [plain("Texas / wherever the airplane lands")]),
-    ("Education:", GREEN,  [plain("Texas A&M "), plain("— Mechanical Engineering", DIM)]),
+    ("Education:", GREEN,  [[("Texas A&M ", FG), ("— Mechanical Engineering", DIM)]]),
     (None, None, None),
     ("Languages.Code:",  BLUE, [plain("Python, C#, Java, JavaScript/TypeScript,"),
                                 [("SQL, Ruby, Lua ", FG), ("+ whatever the problem requires", DIM)]]),
