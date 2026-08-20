@@ -77,10 +77,9 @@ ROWS = [
     ("Current.Hypothesis:", PINK, [P("Technology's highest purpose may be to"),
                                    P("create the conditions in which humans"),
                                    P("can afford to be more human.")]),
-    DIV,
-    ("Status:", GREEN, [B("Still curious."), B("Still building."),
-                        B("Still sharpening the stone.")]),
 ]
+
+STATUS = ["Still curious.", "Still building.", "Still sharpening the stone."]
 
 # footer laid out 2x2 so each cell gets half the card width
 FOOTER = [
@@ -110,6 +109,8 @@ R_FS, R_LH = 14.0, 20.5       # info rows
 F_FS, F_LH = 13.0, 18.5       # footer
 A_ADV, R_ADV, F_ADV = A_FS*0.6, R_FS*0.6, F_FS*0.6
 R_GAP, LABEL_COLS, GUTTER, TITLE_H = 12.0, 21, 30, 84
+S_FS, S_LH = 13.0, 18.5       # status block under the portrait
+LEFT_EXTRA = 30 + 20 + len(["x"]*3)*S_LH   # gap + header + status lines
 
 art = [l for l in open(os.path.join(HERE, "art.txt")).read().split("\n") if l.strip()]
 ART_COLS = max(len(l) for l in art)
@@ -123,7 +124,7 @@ right_x = PAD + LEFT_W + GUTTER
 W = int(right_x + RIGHT_W + PAD)
 
 rows_h = sum(R_GAP if lab is None else len(ls)*R_LH for lab, _, ls in ROWS)
-BODY_H = max(len(art)*A_LH + 66, 34 + rows_h)
+BODY_H = max(len(art)*A_LH + LEFT_EXTRA, 34 + rows_h)
 FOOT_ROW = 24 + 5*F_LH + 14
 FOOT_H   = 2*FOOT_ROW + 12
 H = int(TITLE_H + BODY_H + 30 + FOOT_H + PAD)
@@ -154,14 +155,14 @@ text(right_x, 44, [(HANDLE, GREEN)], 16, "600")
 add(f'<line x1="{right_x}" y1="56" x2="{W-PAD}" y2="56" stroke="{BORDER}" stroke-dasharray="4 5"/>')
 
 # portrait, vertically centred in the left pane
-ay = TITLE_H + 30 + max(0, (BODY_H - (len(art)*A_LH + 66)) / 2)
+ay = TITLE_H + 30 + max(0, (BODY_H - (len(art)*A_LH + LEFT_EXTRA)) / 2)
 for i, line in enumerate(art):
     text(PAD, ay + i*A_LH, [(line, ART)], A_FS,
          extra=f' textLength="{LEFT_W:.1f}" lengthAdjust="spacing"')
 py = ay + len(art)*A_LH + 30
-text(PAD, py, [("mike@human", GREEN), (":~$ ", DIM),
-               ("still_curious.sh", FG)], 12.5)
-text(PAD, py+22, [(">  ", DIM), ("status: ", CYAN), ("always shipping", FG)], 12.5)
+text(PAD, py, [("Status:", GREEN)], 13.5, "600")
+for i, line in enumerate(STATUS):
+    text(PAD, py + 20 + i*S_LH, [(">  ", DIM), (line, FG)], S_FS)
 
 # info rows
 y = TITLE_H + 34
