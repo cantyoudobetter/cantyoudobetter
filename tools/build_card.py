@@ -1,200 +1,203 @@
 #!/usr/bin/env python3
 """Build assets/card.svg -- the terminal-style profile card.
 
-GitHub markdown strips CSS, so the styled layout lives inside an SVG that is
-committed to the repo and referenced with <img>. Regenerate with:
+GitHub markdown strips CSS, so the styled layout is rendered into an SVG that
+is committed to the repo and referenced with <img> from README.md.
+
+Sizing constraint: GitHub's profile-README column maxes out at ~846px wide, and
+an <img> is scaled down to fit it. So the card's *character density* -- not its
+pixel size -- decides legibility. Keep W near LEGIBLE_W and keep value lines
+under VALUE_COLS; the assert at the bottom guards this.
+
     python3 tools/build_card.py
 """
-import os, html
+import os, html, textwrap
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
+
+LEGIBLE_W = 846          # GitHub profile README container width
+VALUE_COLS = 45          # max chars in a value line
 
 # ---------------------------------------------------------------- palette
 BG, CARD, BORDER = "#06070a", "#0a0d12", "#1b2230"
 DIM, FG, WHITE, ART = "#6e7681", "#adbac7", "#e6edf3", "#9aa7b4"
 GREEN, BLUE, CYAN = "#7ee787", "#79c0ff", "#56d4dd"
-MAG, PINK, ORANGE, YELLOW, RED = "#d2a8ff", "#ff7bd7", "#ffa657", "#e3b341", "#ff7b72"
+MAG, PINK, ORANGE, YELLOW = "#d2a8ff", "#ff7bd7", "#ffa657", "#e3b341"
+MONO = ("'SF Mono','SFMono-Regular',ui-monospace,'DejaVu Sans Mono',"
+        "Menlo,Consolas,'Liberation Mono',monospace")
 
-MONO = "'SF Mono','SFMono-Regular',ui-monospace,'DejaVu Sans Mono',Menlo,Consolas,'Liberation Mono',monospace"
-
-# ---------------------------------------------------------------- content
 HANDLE = "cantyoudobetter"
+SEP    = "  ·  "
 
-def b(txt, c=FG):           return [(">  ", DIM), (txt, c)]
-def plain(txt, c=FG):       return [(txt, c)]
+def P(t, c=FG):  return [(t, c)]                      # a plain line
+def B(t, c=FG):  return [(">  ", DIM), (t, c)]        # a bulleted line
+def J(*parts):                                        # join with dim separators
+    out = []
+    for i, p in enumerate(parts):
+        if i: out.append((SEP, DIM))
+        out.append(p if isinstance(p, tuple) else (p, FG))
+    return out
+
+DIV = (None, None, None)
 
 ROWS = [
-    ("OS:",        GREEN,  [[("Human 1.0 ", FG), ("— aggressively upgrading", DIM)]]),
-    ("Role:",      GREEN,  [plain("CTO @ Ways2Well + ReviveRX")]),
-    ("Mission:",   GREEN,  [plain("Make humans healthier. Keep technology human.")]),
-    ("Home Base:", GREEN,  [plain("Texas / wherever the airplane lands")]),
-    ("Education:", GREEN,  [[("Texas A&M ", FG), ("— Mechanical Engineering", DIM)]]),
-    (None, None, None),
-    ("Languages.Code:",  BLUE, [plain("Python, C#, Java, JavaScript/TypeScript,"),
-                                [("SQL, Ruby, Lua ", FG), ("+ whatever the problem requires", DIM)]]),
-    ("Languages.Human:", BLUE, [plain("English, Bad Spanish, Engineer")]),
-    (None, None, None),
-    ("Currently:",  GREEN, [b("AI-native healthcare"), b("Clinical intimacy at scale"),
-                            b("Human optimization + longevity"), b("Agentic systems"),
-                            b("Still writing actual code", WHITE)]),
-    (None, None, None),
-    ("Previously:", BLUE,  [b("Healthcare systems"), b("Pharmacy robotics + remote dispensing"),
-                            b("EHRs before SaaS was cool"), b("Enterprise architecture"),
-                            b("Mobile + cloud"), b("Neural nets before transformers")]),
-    (None, None, None),
-    ("Side.Quests:", GREEN, [
-        [("Airplanes ", FG), ("✈", CYAN), ("  |  ", DIM), ("Weird hardware", FG), ("  |  ", DIM),
-         ("Running", FG), ("  |  ", DIM), ("Skiing", FG)],
-        [("Cooking", FG), ("  |  ", DIM), ("Writing", FG), ("  |  ", DIM), ("Thinking about AGI", FG),
-         ("  |  ", DIM), ("Fighting entropy", FG)]]),
-    (None, None, None),
-    ("Books:", ORANGE, [[("The Black Swan", FG), ("  |  ", DIM), ("Garden of Lies", FG)]]),
-    (None, None, None),
-    ("Operating.System:", YELLOW, [
-        [("Ambitious + honest", FG), ("  |  ", DIM), ("Agency without abandonment", FG)],
-        plain("Fight destructive entropy."),
-        plain("Preserve generative disorder.")]),
-    (None, None, None),
-    ("Current.Hypothesis:", PINK, [
-        plain("Technology's highest purpose may be to create"),
-        plain("the conditions in which humans can afford to"),
-        plain("be more human.")]),
-    (None, None, None),
-    ("Status:", GREEN, [b("Still curious."), b("Still building."), b("Still sharpening the stone.")]),
+    ("OS:",        GREEN, [[("Human 1.0 ", FG), ("— aggressively upgrading", DIM)]]),
+    ("Role:",      GREEN, [P("CTO @ Ways2Well + ReviveRX")]),
+    ("Mission:",   GREEN, [P("Make humans healthier."), P("Keep technology human.")]),
+    ("Home Base:", GREEN, [P("Texas / wherever the airplane lands")]),
+    ("Education:", GREEN, [[("Texas A&M ", FG), ("— Mechanical Engineering", DIM)]]),
+    DIV,
+    ("Languages.Code:",  BLUE, [P("Python, C#, Java, JavaScript/TypeScript,"),
+                                [("SQL, Ruby, Lua ", FG),
+                                 ("+ whatever the job needs", DIM)]]),
+    ("Languages.Human:", BLUE, [P("English, Bad Spanish, Engineer")]),
+    DIV,
+    ("Currently:", GREEN, [B("AI-native healthcare"), B("Clinical intimacy at scale"),
+                           B("Human optimization + longevity"), B("Agentic systems"),
+                           B("Still writing actual code", WHITE)]),
+    DIV,
+    ("Previously:", BLUE, [B("Healthcare systems"), B("Pharmacy robotics + remote dispensing"),
+                           B("EHRs before SaaS was cool"), B("Enterprise architecture"),
+                           B("Mobile + cloud"), B("Neural nets before transformers")]),
+    DIV,
+    ("Side.Quests:", GREEN, [J(("Airplanes ✈", CYAN), "Weird hardware"),
+                             J("Running", "Skiing", "Cooking"),
+                             J("Writing", "Thinking about AGI"),
+                             J("Fighting entropy")]),
+    DIV,
+    ("Books:", ORANGE, [J("The Black Swan", "Garden of Lies")]),
+    DIV,
+    ("Operating.System:", YELLOW, [P("Ambitious + honest"),
+                                   P("Agency without abandonment"),
+                                   P("Fight destructive entropy."),
+                                   P("Preserve generative disorder.")]),
+    DIV,
+    ("Current.Hypothesis:", PINK, [P("Technology's highest purpose may be to"),
+                                   P("create the conditions in which humans"),
+                                   P("can afford to be more human.")]),
+    DIV,
+    ("Status:", GREEN, [B("Still curious."), B("Still building."),
+                        B("Still sharpening the stone.")]),
 ]
 
+# footer laid out 2x2 so each cell gets half the card width
 FOOTER = [
-    ("github.stats", GREEN, [
-        [("since",      DIM), ("2015", BLUE)],
-        [("repos",      DIM), ("39",   BLUE)],
-        [("languages",  DIM), ("8+",   BLUE)],
-        [("stars",      DIM), ("go ahead", BLUE)],
-        [("ego",        DIM), ("negotiable", BLUE)]]),
-    ("currently.building", GREEN, [
-        [("◈ ", CYAN),   ("AI-native healthcare platform", FG)],
-        [("★ ", YELLOW), ("Clinical workflows that put humans first", FG)],
-        [("◈ ", CYAN),   ("Agentic systems that reduce friction", FG)],
-        [("◈ ", CYAN),   ("Developer experience that doesn't suck", FG)]]),
-    ("toolkit.exe", GREEN, [
-        [("▸ ", BLUE), ("VS Code",  FG), ("PostgreSQL", FG)],
-        [("▸ ", BLUE), ("JetBrains",FG), ("Redis",      FG)],
-        [("▸ ", BLUE), ("Docker",   FG), ("AWS",        FG)],
-        [("▸ ", BLUE), ("Linux",    FG), ("Git",        FG)]]),
-    ("contact.ping", GREEN, [
-        [("✉ ", DIM), ("mike@ways2well.com", FG)],
-        [("◉ ", DIM), ("mikebordelon.com", FG)],
-        [("✕ ", DIM), ("x.com/mikebordelon", FG)],
-        [("in ", DIM),     ("linkedin.com/in/mikebordelon", FG)]]),
+    ("github.stats", [[("since",     DIM), ("2015",       BLUE)],
+                      [("repos",     DIM), ("39",         BLUE)],
+                      [("languages", DIM), ("8+",         BLUE)],
+                      [("stars",     DIM), ("go ahead",   BLUE)],
+                      [("ego",       DIM), ("negotiable", BLUE)]], "kv"),
+    ("currently.building", [[("◈ ", CYAN),   ("AI-native healthcare platform", FG)],
+                            [("★ ", YELLOW), ("Clinical workflows, humans first", FG)],
+                            [("◈ ", CYAN),   ("Agentic systems that cut friction", FG)],
+                            [("◈ ", CYAN),   ("Dev experience that doesn't suck", FG)]], "seg"),
+    ("toolkit.exe", [J("VS Code", "PostgreSQL"), J("JetBrains", "Redis"),
+                     J("Docker", "AWS"), J("Linux", "Git")], "seg"),
+    ("contact.ping", [[("✉  ", DIM), ("mike@ways2well.com", FG)],
+                      [("◉  ", DIM), ("mikebordelon.com", FG)],
+                      [("✕  ", DIM), ("x.com/mikebordelon", FG)],
+                      [("in ", DIM), ("linkedin.com/in/mikebordelon", FG)]], "seg"),
 ]
 
 # ---------------------------------------------------------------- geometry
-PAD        = 40
-A_FS, A_LH = 11.5, 12.25          # portrait font-size / line-height
-A_ADV      = A_FS * 0.6
-R_FS, R_LH = 15.0, 23.0           # info rows
-R_ADV      = R_FS * 0.6
-R_GAP      = 13.0                 # extra space at a group divider
-F_FS, F_LH = 12.5, 19.0           # footer
-F_ADV      = F_FS * 0.6
-LABEL_COLS = 20
+PAD        = 26
+A_FS, A_LH = 12.0, 12.8       # portrait
+R_FS, R_LH = 14.0, 20.5       # info rows
+F_FS, F_LH = 13.0, 18.5       # footer
+A_ADV, R_ADV, F_ADV = A_FS*0.6, R_FS*0.6, F_FS*0.6
+R_GAP, LABEL_COLS, GUTTER, TITLE_H = 12.0, 19, 30, 84
 
-art = [l.rstrip("\n") for l in open(os.path.join(HERE, "art.txt")).read().split("\n") if l.strip()]
+art = [l for l in open(os.path.join(HERE, "art.txt")).read().split("\n") if l.strip()]
 ART_COLS = max(len(l) for l in art)
 art = [l.ljust(ART_COLS) for l in art]
 
-def seg_w(segs, adv): return sum(len(t) for t, _ in segs) * adv
+def seg_len(segs): return sum(len(t) for t, _ in segs)
 
 LEFT_W  = ART_COLS * A_ADV
-RIGHT_W = max(seg_w(l, R_ADV) for _, _, ls in ROWS if ls for l in ls) + LABEL_COLS * R_ADV + 10
-GUTTER  = 46
-
-TITLE_H = 92
-left_x  = PAD
+RIGHT_W = LABEL_COLS*R_ADV + VALUE_COLS*R_ADV
 right_x = PAD + LEFT_W + GUTTER
-
-body_h_left  = len(art) * A_LH + 64          # + shell prompt lines
-rows_h = 0
-for lab, _, ls in ROWS:
-    rows_h += R_GAP if lab is None else len(ls) * R_LH
-body_h_right = 34 + rows_h
-
-BODY_H   = max(body_h_left, body_h_right)
-FOOT_H   = 24 + 4 + max(len(v) for _, _, v in FOOTER) * F_LH + 22
 W = int(right_x + RIGHT_W + PAD)
-H = int(TITLE_H + BODY_H + 34 + FOOT_H + PAD)
+
+rows_h = sum(R_GAP if lab is None else len(ls)*R_LH for lab, _, ls in ROWS)
+BODY_H = max(len(art)*A_LH + 66, 34 + rows_h)
+FOOT_ROW = 24 + 5*F_LH + 14
+FOOT_H   = 2*FOOT_ROW + 12
+H = int(TITLE_H + BODY_H + 30 + FOOT_H + PAD)
 
 # ---------------------------------------------------------------- emit
-o = []
-def add(s): o.append(s)
-def esc(s):  return html.escape(s, quote=False)
+o, add = [], lambda s: o.append(s)
+esc = lambda s: html.escape(s, quote=False)
 
 def text(x, y, segs, fs, weight="400", extra=""):
     parts = "".join(f'<tspan fill="{c}">{esc(t)}</tspan>' for t, c in segs)
     add(f'<text x="{x:.1f}" y="{y:.1f}" font-family="{MONO}" font-size="{fs}" '
         f'font-weight="{weight}" xml:space="preserve"{extra}>{parts}</text>')
 
-add(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
-    f'role="img" aria-label="{HANDLE} profile card">')
-add(f'<rect width="{W}" height="{H}" rx="16" fill="{BG}"/>')
-add(f'<rect x="10" y="10" width="{W-20}" height="{H-20}" rx="13" fill="{CARD}" stroke="{BORDER}"/>')
+ALT = ("Terminal-style profile card for Michael Bordelon (cantyoudobetter): CTO at "
+       "Ways2Well and ReviveRX, building AI-native healthcare, clinical intimacy at "
+       "scale, human optimization and longevity, and agentic systems. Still curious, "
+       "still building.")
 
-# titlebar
+add(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
+    f'viewBox="0 0 {W} {H}" role="img" aria-label="{esc(ALT)}">')
+add(f'<rect width="{W}" height="{H}" rx="14" fill="{BG}"/>')
+add(f'<rect x="8" y="8" width="{W-16}" height="{H-16}" rx="11" fill="{CARD}" stroke="{BORDER}"/>')
+
 for i, c in enumerate(("#ff5f57", "#febc2e", "#28c840")):
-    add(f'<circle cx="{PAD + i*22}" cy="42" r="7" fill="{c}"/>')
-text(PAD, 84, [(HANDLE, WHITE), (" / ", DIM), ("README.md", FG)], 16, "600")
+    add(f'<circle cx="{PAD + i*20}" cy="38" r="6.5" fill="{c}"/>')
+text(PAD, 76, [(HANDLE, WHITE), (" / ", DIM), ("README.md", FG)], 15, "600")
+text(right_x, 44, [(HANDLE, GREEN)], 16, "600")
+add(f'<line x1="{right_x}" y1="56" x2="{W-PAD}" y2="56" stroke="{BORDER}" stroke-dasharray="4 5"/>')
 
-# right header + dashed rule
-text(right_x, 47, [(HANDLE, GREEN)], 17, "600")
-add(f'<line x1="{right_x}" y1="60" x2="{W-PAD}" y2="60" stroke="{BORDER}" '
-    f'stroke-dasharray="4 5"/>')
-
-# portrait
-ay = TITLE_H + 26
+# portrait, vertically centred in the left pane
+ay = TITLE_H + 30 + max(0, (BODY_H - (len(art)*A_LH + 66)) / 2)
 for i, line in enumerate(art):
-    text(left_x, ay + i*A_LH, [(line, ART)], A_FS,
+    text(PAD, ay + i*A_LH, [(line, ART)], A_FS,
          extra=f' textLength="{LEFT_W:.1f}" lengthAdjust="spacing"')
-
-# shell prompt under portrait
 py = ay + len(art)*A_LH + 30
-text(left_x, py, [("mike@human", GREEN), (":~$ ", DIM),
-                  ("still_curious.still_building.sh", FG)], 13.5)
-text(left_x, py + 24, [(">  ", DIM), ("status: ", CYAN),
-                       ("always learning, always shipping", FG)], 13.5)
+text(PAD, py, [("mike@human", GREEN), (":~$ ", DIM),
+               ("still_curious.sh", FG)], 12.5)
+text(PAD, py+22, [(">  ", DIM), ("status: ", CYAN), ("always shipping", FG)], 12.5)
 
 # info rows
 y = TITLE_H + 34
 for lab, lc, ls in ROWS:
     if lab is None:
-        add(f'<line x1="{right_x}" y1="{y - R_LH + 8:.1f}" x2="{W-PAD}" y2="{y - R_LH + 8:.1f}" '
-            f'stroke="{BORDER}"/>')
+        yy = y - R_LH + 9
+        add(f'<line x1="{right_x}" y1="{yy:.1f}" x2="{W-PAD}" y2="{yy:.1f}" stroke="{BORDER}"/>')
         y += R_GAP
         continue
     text(right_x, y, [(lab, lc)], R_FS, "600")
-    vx = right_x + LABEL_COLS * R_ADV
     for line in ls:
-        text(vx, y, line, R_FS)
+        text(right_x + LABEL_COLS*R_ADV, y, line, R_FS)
         y += R_LH
 
-# footer panel
-fy = TITLE_H + BODY_H + 22
-add(f'<rect x="{PAD-14}" y="{fy}" width="{W-2*(PAD-14)}" height="{FOOT_H}" rx="8" '
+# footer 2x2
+fy = TITLE_H + BODY_H + 20
+add(f'<rect x="{PAD-12}" y="{fy}" width="{W-2*(PAD-12)}" height="{FOOT_H}" rx="8" '
     f'fill="none" stroke="{BORDER}"/>')
-col_x = [PAD, PAD + 300, PAD + 300 + 420, PAD + 300 + 420 + 260]
-for (title, tc, items), cx in zip(FOOTER, col_x):
-    text(cx, fy + 26, [(title, tc)], 13, "600")
+half = (W - 2*(PAD-12)) / 2
+for idx, (title, items, kind) in enumerate(FOOTER):
+    cx = PAD + (idx % 2) * half
+    cy = fy + 14 + (idx // 2) * FOOT_ROW
+    text(cx, cy + 14, [(title, GREEN)], 12.5, "600")
     for j, segs in enumerate(items):
-        yy = fy + 26 + 22 + j*F_LH
-        if title == "github.stats":
-            text(cx, yy, [(segs[0][0], segs[0][1])], F_FS)
-            text(cx + 150, yy, [(segs[1][0], segs[1][1])], F_FS)
-        elif title == "toolkit.exe":
-            text(cx, yy, [segs[0], segs[1]], F_FS)
-            text(cx + 160, yy, [(segs[0][0], segs[0][1]), segs[2]], F_FS)
+        yy = cy + 14 + 20 + j*F_LH
+        if kind == "kv":
+            text(cx, yy, [segs[0]], F_FS)
+            text(cx + 22*F_ADV, yy, [segs[1]], F_FS)
         else:
             text(cx, yy, segs, F_FS)
 add('</svg>')
 
-out = os.path.join(ROOT, "assets", "card.svg")
-open(out, "w").write("\n".join(o) + "\n")
-print(f"wrote {out}  ({W}x{H})")
+open(os.path.join(ROOT, "assets", "card.svg"), "w").write("\n".join(o) + "\n")
+
+# guard the legibility budget
+over = [ (lab, seg_len(l)) for lab, _, ls in ROWS if ls for l in ls if seg_len(l) > VALUE_COLS ]
+scale = LEGIBLE_W / W
+print(f"wrote assets/card.svg  {W}x{H}")
+print(f"at GitHub width {LEGIBLE_W}: scale {scale:.2f}, "
+      f"info text {R_FS*scale:.1f}px, footer {F_FS*scale:.1f}px, art {A_FS*scale:.1f}px")
+if over: print("OVER BUDGET:", over)
+assert not over, "value lines exceed VALUE_COLS"
