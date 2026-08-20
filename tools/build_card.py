@@ -107,7 +107,7 @@ A_FS, A_LH = 12.0, 12.8       # portrait
 R_FS, R_LH = 14.0, 20.5       # info rows
 F_FS, F_LH = 13.0, 18.5       # footer
 A_ADV, R_ADV, F_ADV = A_FS*0.6, R_FS*0.6, F_FS*0.6
-R_GAP, LABEL_COLS, GUTTER, TITLE_H = 12.0, 21, 30, 84
+R_GAP, LABEL_COLS, GUTTER, TITLE_H = 12.0, 21, 30, 68
 S_FS, S_LH = 13.0, 18.5       # status block under the portrait
 LEFT_EXTRA = 30 + 20 + len(["x"]*3)*S_LH   # gap + header + status lines
 
@@ -147,11 +147,10 @@ add(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
 add(f'<rect width="{W}" height="{H}" rx="14" fill="{BG}"/>')
 add(f'<rect x="8" y="8" width="{W-16}" height="{H-16}" rx="11" fill="{CARD}" stroke="{BORDER}"/>')
 
-for i, c in enumerate(("#ff5f57", "#febc2e", "#28c840")):
-    add(f'<circle cx="{PAD + i*20}" cy="38" r="6.5" fill="{c}"/>')
-text(PAD, 76, [(HANDLE, WHITE), (" / ", DIM), ("README.md", FG)], 15, "600")
-text(right_x, 44, [(HANDLE, GREEN)], 16, "600")
-add(f'<line x1="{right_x}" y1="56" x2="{W-PAD}" y2="56" stroke="{BORDER}" stroke-dasharray="4 5"/>')
+# header: both titles share one baseline now that the window chrome is gone
+text(PAD, 48, [(HANDLE, WHITE), (" / ", DIM), ("README.md", FG)], 15, "600")
+text(right_x, 48, [(HANDLE, GREEN)], 16, "600")
+add(f'<line x1="{right_x}" y1="60" x2="{W-PAD}" y2="60" stroke="{BORDER}" stroke-dasharray="4 5"/>')
 
 # portrait, vertically centred in the left pane
 ay = TITLE_H + 30 + max(0, (BODY_H - (len(art)*A_LH + LEFT_EXTRA)) / 2)
