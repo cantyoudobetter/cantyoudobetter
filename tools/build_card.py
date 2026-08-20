@@ -147,8 +147,7 @@ add(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
 add(f'<rect width="{W}" height="{H}" rx="14" fill="{BG}"/>')
 add(f'<rect x="8" y="8" width="{W-16}" height="{H-16}" rx="11" fill="{CARD}" stroke="{BORDER}"/>')
 
-# header: both titles share one baseline now that the window chrome is gone
-text(PAD, 48, [(HANDLE, WHITE), (" / ", DIM), ("README.md", FG)], 15, "600")
+# header: just the handle over the info column
 text(right_x, 48, [(HANDLE, GREEN)], 16, "600")
 add(f'<line x1="{right_x}" y1="60" x2="{W-PAD}" y2="60" stroke="{BORDER}" stroke-dasharray="4 5"/>')
 
