@@ -43,7 +43,6 @@ DIV = (None, None, None)
 
 ROWS = [
     ("Role:",      GREEN, [P("CTO @ Ways2Well + ReviveRX")]),
-    ("Mission:",   GREEN, [P("Make humans healthier."), P("Keep technology human.")]),
     ("Home Base:", GREEN, [P("Texas / wherever the airplane lands")]),
     ("Education:", GREEN, [[("Texas A&M ", FG), ("— Mechanical Engineering", DIM)]]),
     DIV,
@@ -78,7 +77,13 @@ ROWS = [
                                    P("can afford to be more human.")]),
 ]
 
-STATUS = ["Still curious.", "Still building.", "Still sharpening the stone."]
+# blocks stacked under the portrait in the left pane
+LEFT_BLOCKS = [
+    ("Mission:", GREEN, ["Make humans healthier.", "Keep technology human.",
+                         "Supercharge Teams & Family"]),
+    ("Status:",  GREEN, ["Still curious.", "Still building.",
+                         "Still sharpening the stone."]),
+]
 
 # footer laid out 2x2 so each cell gets half the card width
 FOOTER = [
@@ -109,7 +114,9 @@ F_FS, F_LH = 13.0, 18.5       # footer
 A_ADV, R_ADV, F_ADV = A_FS*0.6, R_FS*0.6, F_FS*0.6
 R_GAP, LABEL_COLS, GUTTER, TITLE_H = 12.0, 21, 30, 68
 S_FS, S_LH = 13.0, 18.5       # status block under the portrait
-LEFT_EXTRA = 30 + 20 + len(["x"]*3)*S_LH   # gap + header + status lines
+S_HDR, S_GAP = 20, 24         # header offset / gap between left blocks
+LEFT_EXTRA = (30 + sum(S_HDR + len(b[2])*S_LH + S_GAP for b in LEFT_BLOCKS)
+              - S_GAP)
 
 art = [l for l in open(os.path.join(HERE, "art.txt")).read().split("\n") if l.strip()]
 ART_COLS = max(len(l) for l in art)
@@ -157,9 +164,11 @@ for i, line in enumerate(art):
     text(PAD, ay + i*A_LH, [(line, ART)], A_FS,
          extra=f' textLength="{LEFT_W:.1f}" lengthAdjust="spacing"')
 py = ay + len(art)*A_LH + 30
-text(PAD, py, [("Status:", GREEN)], 13.5, "600")
-for i, line in enumerate(STATUS):
-    text(PAD, py + 20 + i*S_LH, [(">  ", DIM), (line, FG)], S_FS)
+for hdr, hc, lines in LEFT_BLOCKS:
+    text(PAD, py, [(hdr, hc)], 13.5, "600")
+    for i, line in enumerate(lines):
+        text(PAD, py + S_HDR + i*S_LH, [(">  ", DIM), (line, FG)], S_FS)
+    py += S_HDR + len(lines)*S_LH + S_GAP
 
 # info rows
 y = TITLE_H + 34
