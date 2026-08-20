@@ -144,10 +144,37 @@ def text(x, y, segs, fs, weight="400", extra=""):
     add(f'<text x="{x:.1f}" y="{y:.1f}" font-family="{MONO}" font-size="{fs}" '
         f'font-weight="{weight}" xml:space="preserve"{extra}>{parts}</text>')
 
-ALT = ("Terminal-style profile card for Michael Bordelon (cantyoudobetter): CTO at "
-       "Ways2Well and ReviveRX, building AI-native healthcare, clinical intimacy at "
-       "scale, human optimization and longevity, and agentic systems. Still curious, "
-       "still building.")
+# The card is an image, so this alt text is the ONLY way screen readers, search
+# engines and link previews see any of it. Derive it from the content rather
+# than hand-writing it, so it cannot drift out of date again.
+def _spoken(segs):
+    t = "".join(x for x, _ in segs)
+    for a, b in ((">  ", ""), ("  ·  ", ", "), (" → ", " to "), ("—", "-")):
+        t = t.replace(a, b)
+    for g in "✈✉✕◉▸◈★":
+        t = t.replace(g, "")
+    return " ".join(t.split())
+
+def describe():
+    out = []
+    for lab, _, ls in ROWS:
+        if lab is None:
+            continue
+        out.append(f"{lab.rstrip(':')}: " + "; ".join(_spoken(l) for l in ls))
+    for hdr, _, lines, _ in LEFT_BLOCKS:
+        out.append(f"{hdr.rstrip(':')}: " + " ".join(lines))
+    for title, items, _ in FOOTER:
+        out.append(f"{title.rstrip(':')}: " + "; ".join(_spoken(i) for i in items))
+    t = ("Terminal-style profile card for Michael Bordelon (cantyoudobetter). "
+         + ". ".join(out) + ".")
+    import re as _r
+    t = _r.sub(r"\bin (linkedin)", r"\1", t)   # the 'in' glyph before the URL
+    t = _r.sub(r"\s+([,;.])", r"\1", t)        # space left by a stripped glyph
+    t = _r.sub(r",\s*;", ";", t)               # trailing comma on a wrapped line
+    t = _r.sub(r"\.{2,}", ".", t)              # sentence period + join period
+    return t
+
+ALT = describe()
 
 add(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
     f'viewBox="0 0 {W} {H}" role="img" aria-label="{esc(ALT)}">')
@@ -203,6 +230,14 @@ for idx, (title, items, kind) in enumerate(FOOTER):
 add('</svg>')
 
 open(os.path.join(ROOT, "assets", "card.svg"), "w").write("\n".join(o) + "\n")
+
+readme = os.path.join(ROOT, "README.md")
+rm = open(readme).read()
+import re as _re
+rm2 = _re.sub(r'alt="[^"]*"', 'alt="' + ALT.replace('"', "'") + '"', rm, count=1)
+if rm2 != rm:
+    open(readme, "w").write(rm2)
+    print("README alt text synced")
 
 # guard the legibility budget
 over = [ (lab, seg_len(l)) for lab, _, ls in ROWS if ls for l in ls if seg_len(l) > VALUE_COLS ]
