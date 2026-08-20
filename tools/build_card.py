@@ -61,7 +61,7 @@ ROWS = [
                            B("EHRs before SaaS was cool"), B("Enterprise architecture"),
                            B("Mobile + cloud"), B("Construction tech")]),
     DIV,
-    ("Side.Quests:", GREEN, [J(("Airplanes ✈", CYAN), "Weird hardware"),
+    ("Side.Quests:", GREEN, [J(("Airplanes ✈", CYAN), "Handbuilt Race Cars"),
                              J("Running", "Skiing", "Cooking"),
                              J("Writing", "Thinking about AGI"),
                              J("Fighting entropy")]),
