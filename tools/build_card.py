@@ -83,10 +83,10 @@ ROWS = [
 
 # blocks stacked under the portrait in the left pane
 LEFT_BLOCKS = [
+    ("Status:", GREEN, ["Still curious.", "Still sharpening the stone."], True),
     ("Current.Hypothesis:", PINK, ["Technology's highest purpose may be to",
                                    "create the conditions in which humans",
                                    "can afford to be more human."], False),
-    ("Status:", GREEN, ["Still curious.", "Still sharpening the stone."], True),
 ]
 
 # footer laid out 2x2 so each cell gets half the card width
