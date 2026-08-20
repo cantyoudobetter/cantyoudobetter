@@ -106,7 +106,7 @@ A_FS, A_LH = 12.0, 12.8       # portrait
 R_FS, R_LH = 14.0, 20.5       # info rows
 F_FS, F_LH = 13.0, 18.5       # footer
 A_ADV, R_ADV, F_ADV = A_FS*0.6, R_FS*0.6, F_FS*0.6
-R_GAP, LABEL_COLS, GUTTER, TITLE_H = 12.0, 19, 30, 84
+R_GAP, LABEL_COLS, GUTTER, TITLE_H = 12.0, 21, 30, 84
 
 art = [l for l in open(os.path.join(HERE, "art.txt")).read().split("\n") if l.strip()]
 ART_COLS = max(len(l) for l in art)
