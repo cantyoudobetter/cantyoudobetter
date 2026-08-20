@@ -4,7 +4,7 @@
 </p>
 
 <p align="center">
-  <a href="https://x.com/cantyoudobetter">x</a> ·
+  <a href="https://x.com/cantyoudobester">x</a> ·
   <a href="https://www.linkedin.com/in/mikebordelon/">linkedin</a> ·
   <a href="mailto:michael.d.bordelon@gmail.com">michael.d.bordelon@gmail.com</a>
 </p>
