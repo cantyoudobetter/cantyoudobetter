@@ -74,7 +74,7 @@ ROWS = [
                            B("Non-invasive blood glucose monitor"),
                            B("Construction tech")]),
     DIV,
-    ("Side.Quests:", GREEN, [J(("Airplanes ✈", CYAN), "Handbuilt Race Cars"),
+    ("Side.Quests:", GREEN, [J("Airplanes", "Handbuilt Race Cars"),
                              J("Sailing", "Camping", "Snowboarding"),
                              J("Running", "Cooking", "Writing")]),
     DIV,
