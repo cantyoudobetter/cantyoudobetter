@@ -64,34 +64,25 @@ ROWS = [
                              J("Sailing", "Camping", "Snowboarding"),
                              J("Running", "Cooking", "Writing")]),
     DIV,
-    ("Books:", ORANGE, [J("Black Swan Event", "Garden of Lies")]),
-    DIV,
-    ("Operating.System:", YELLOW, [P("Always Be Building"),
-                                   P("Ambitious + honest"),
-                                   P("Agency without abandonment"),
-                                   P("Fight destructive entropy"),
-                                   P("Preserve generative disorder")]),
+    ("Books:", ORANGE, [J("The Black Swan", "Garden of Lies")]),
     DIV,
     ("Current.Hypothesis:", PINK, [P("Technology's highest purpose may be to"),
                                    P("create the conditions in which humans"),
                                    P("can afford to be more human.")]),
+    DIV,
+    ("Long.Game:", YELLOW, [P("Live long enough to die on Mars")]),
 ]
 
 # blocks stacked under the portrait in the left pane
 LEFT_BLOCKS = [
-    ("Mission:", GREEN, ["Make humans healthier.", "Keep technology human.",
-                         "Supercharge Teams & Family"]),
-    ("Status:",  GREEN, ["Still curious.", "Still building.",
-                         "Still sharpening the stone."]),
+    ("Status:", GREEN, ["Still curious.", "Still sharpening the stone."]),
 ]
 
 # footer laid out 2x2 so each cell gets half the card width
 FOOTER = [
-    ("github.stats", [[("since",     DIM), ("2015",       BLUE)],
-                      [("repos",     DIM), ("39",         BLUE)],
-                      [("languages", DIM), ("8+",         BLUE)],
-                      [("stars",     DIM), ("go ahead",   BLUE)],
-                      [("ego",       DIM), ("negotiable", BLUE)]], "kv"),
+    ("github.stats", [[("since", DIM), ("2015",       BLUE)],
+                      [("stars", DIM), ("go ahead",   BLUE)],
+                      [("ego",   DIM), ("negotiable", BLUE)]], "kv"),
     ("currently.building", [[("◈ ", CYAN),   ("AI-native healthcare platform", FG)],
                             [("★ ", YELLOW), ("Clinical workflows, humans first", FG)],
                             [("◈ ", CYAN),   ("Agentic systems that cut friction", FG)],
