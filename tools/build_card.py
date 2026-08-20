@@ -42,7 +42,6 @@ def J(*parts):                                        # join with dim separators
 DIV = (None, None, None)
 
 ROWS = [
-    ("OS:",        GREEN, [[("Human 1.0 ", FG), ("— aggressively upgrading", DIM)]]),
     ("Role:",      GREEN, [P("CTO @ Ways2Well + ReviveRX")]),
     ("Mission:",   GREEN, [P("Make humans healthier."), P("Keep technology human.")]),
     ("Home Base:", GREEN, [P("Texas / wherever the airplane lands")]),
