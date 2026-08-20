@@ -52,6 +52,8 @@ ROWS = [
                            P("100K+ construction pros")]),
     ("Patents:", BLUE, [[("4 granted", FG),
                          ("  —  glucose, trucking, dispensing", DIM)]]),
+    ("Exits:", BLUE, [[("5", FG),
+                       ("  —  founded, built, grown", DIM)]]),
     DIV,
     ("Languages.Code:",  BLUE, [P("Python, C#, Java, JavaScript/TypeScript,"),
                                 [("SQL, Ruby, Lua ", FG),
