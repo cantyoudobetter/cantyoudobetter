@@ -96,7 +96,7 @@ FOOTER = [
     ("toolkit.exe", [J("VS Code", "PostgreSQL"), J("JetBrains", "Redis"),
                      J("Docker", "AWS"), J("Linux", "Git")], "seg"),
     ("contact.ping", [[("✉  ", DIM), ("michael.d.bordelon@gmail.com", FG)],
-                      [("✕  ", DIM), ("x.com/cantyoudobester", FG)],
+                      [("✕  ", DIM), ("x.com/cantyoudobetter", FG)],
                       [("in ", DIM), ("linkedin.com/in/mikebordelon", FG)]], "seg"),
 ]
 
