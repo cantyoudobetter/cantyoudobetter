@@ -42,7 +42,8 @@ def J(*parts):                                        # join with dim separators
 DIV = (None, None, None)
 
 ROWS = [
-    ("Status:", GREEN, [B("Still curious."), B("Still sharpening the stone.")]),
+    ("Status:", GREEN, [B("Still Curious"), B("Still Building"),
+                        B("Still Sharpening the Stone")]),
     DIV,
     ("Role:",      GREEN, [P("CTO @ Ways2Well + ReviveRX")]),
     ("Home Base:", GREEN, [P("Texas / wherever the airplane lands")]),
