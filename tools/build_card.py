@@ -91,9 +91,9 @@ LEFT_BLOCKS = [
 
 # footer laid out 2x2 so each cell gets half the card width
 FAMILY = [("Sheri",   "Events By Sheri, LLC"),
-          ("Blake",   "AI PhD, Researcher at SpaceXAI"),
+          ("Blake",   "AI PhD, Researcher @ SpaceXAI"),
           ("Camilla", "Polymath Economist"),
-          ("Grant",   "Tech and Ops at SF 49ers"),
+          ("Grant",   "Tech and Ops @ SF 49ers"),
           ("Jayce",   "Tech Lead @ TasteLabs"),
           ("Zoe",     "Canine Extraordinaire")]
 _NW = max(len(n) for n, _ in FAMILY) + 2
