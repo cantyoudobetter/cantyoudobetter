@@ -201,3 +201,10 @@ print(f"at GitHub width {LEGIBLE_W}: scale {scale:.2f}, "
       f"info text {R_FS*scale:.1f}px, footer {F_FS*scale:.1f}px, art {A_FS*scale:.1f}px")
 if over: print("OVER BUDGET:", over)
 assert not over, "value lines exceed VALUE_COLS"
+
+# Regenerating the portrait from the source photo:
+#   sips -c 1240 1000 tools/photo-source.jpg --out /tmp/c.jpg
+#   sips -c 1240 700  /tmp/c.jpg            --out /tmp/h.jpg
+#   python3 tools/asciify.py /tmp/h.jpg --cols 44 --gamma 0.85 --floor 0.20 \
+#       --ceil 0.71 --bg-thresh 240 --bg-soft 120 --bg-sat 0.10 \
+#       --ramp '  .:-=+*#%@' --despeckle 3 --pad --out tools/art.txt
