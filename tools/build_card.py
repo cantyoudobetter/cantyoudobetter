@@ -52,8 +52,12 @@ ROWS = [
     ("Languages.Human:", BLUE, [J("English", "Engineer", "Chilton"),
                                 J("Hex", "NOTAM", "METAR")]),
     DIV,
-    ("Currently:", GREEN, [B("AI-native healthcare"), B("Clinical intimacy at scale"),
-                           B("Human optimization + longevity"), B("Agentic systems"),
+    ("Currently:", GREEN, [B("AI-native healthcare platform"),
+                           B("Clinical intimacy at scale"),
+                           B("Clinical workflows that put humans first"),
+                           B("Human optimization + longevity"),
+                           B("Agentic systems that cut friction"),
+                           B("Developer experience that doesn't suck"),
                            B("Still writing actual code", WHITE)]),
     DIV,
     ("Previously:", BLUE, [B("Healthcare systems"), B("Pharmacy robotics + remote dispensing"),
@@ -79,19 +83,16 @@ LEFT_BLOCKS = [
 ]
 
 # footer laid out 2x2 so each cell gets half the card width
+FAMILY = [("Sheri",   "Events By Sheri, LLC"),
+          ("Blake",   "AI PhD, Researcher at SpaceXAI"),
+          ("Camilla", "Polymath Economist"),
+          ("Grant",   "Tech and Ops at SF 49ers"),
+          ("Jayce",   "Tech Lead @ TasteLabs"),
+          ("Zoe",     "Canine Extraordinaire")]
+_NW = max(len(n) for n, _ in FAMILY) + 2
+
 FOOTER = [
-    ("github.stats", [[("since", DIM), ("2015",       BLUE)],
-                      [("stars", DIM), ("go ahead",   BLUE)],
-                      [("ego",   DIM), ("negotiable", BLUE)]], "kv"),
-    ("currently.building", [[("◈ ", CYAN),   ("AI-native healthcare platform", FG)],
-                            [("★ ", YELLOW), ("Clinical workflows, humans first", FG)],
-                            [("◈ ", CYAN),   ("Agentic systems that cut friction", FG)],
-                            [("◈ ", CYAN),   ("Dev experience that doesn't suck", FG)]], "seg"),
-    ("family.tree", [[("Sheri  ", BLUE), ("Events By Sheri, LLC", FG)],
-                     [("Blake  ", BLUE), ("AI PhD, Researcher at SpaceXAI", FG)],
-                     [("Grant  ", BLUE), ("Tech and Ops at SF 49ers", FG)],
-                     [("Jayce  ", BLUE), ("Tech Lead @ TasteLabs", FG)],
-                     [("Zoe    ", BLUE), ("Canine Extraordinaire", FG)]], "seg"),
+    ("family.tree", [[(n.ljust(_NW), BLUE), (r, FG)] for n, r in FAMILY], "seg"),
     ("contact.ping", [[("✉  ", DIM), ("michael.d.bordelon@gmail.com", FG)],
                       [("✕  ", DIM), ("x.com/cantyoudobester", FG)],
                       [("in ", DIM), ("linkedin.com/in/mikebordelon", FG)]], "seg"),
@@ -122,8 +123,9 @@ W = int(right_x + RIGHT_W + PAD)
 
 rows_h = sum(R_GAP if lab is None else len(ls)*R_LH for lab, _, ls in ROWS)
 BODY_H = max(len(art)*A_LH + LEFT_EXTRA, 34 + rows_h)
-FOOT_ROW = 24 + 5*F_LH + 14
-FOOT_H   = 2*FOOT_ROW + 12
+FOOT_ROW  = 24 + max(len(v) for _, v, _ in FOOTER)*F_LH + 14
+FOOT_ROWS = -(-len(FOOTER) // 2)          # 2 panels per row, rounded up
+FOOT_H    = FOOT_ROWS*FOOT_ROW + 12
 H = int(TITLE_H + BODY_H + 30 + FOOT_H + PAD)
 
 # ---------------------------------------------------------------- emit
