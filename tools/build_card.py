@@ -113,6 +113,7 @@ R_FS, R_LH = 14.0, 20.5       # info rows
 F_FS, F_LH = 13.0, 18.5       # footer
 A_ADV, R_ADV, F_ADV = A_FS*0.6, R_FS*0.6, F_FS*0.6
 R_GAP, LABEL_COLS, GUTTER, TITLE_H = 12.0, 21, 30, 68
+FOOT_INDENT = 16              # inset of the footer panels
 S_FS, S_LH = 13.0, 18.5       # status block under the portrait
 S_HDR, S_GAP = 20, 24         # header offset / gap between left blocks
 LEFT_EXTRA = (30 + sum(S_HDR + len(b[2])*S_LH + S_GAP for b in LEFT_BLOCKS)
@@ -214,12 +215,14 @@ for lab, lc, ls in ROWS:
 
 # footer 2x2
 fy = TITLE_H + BODY_H + 20
-add(f'<rect x="{PAD-12}" y="{fy}" width="{W-2*(PAD-12)}" height="{FOOT_H}" rx="8" '
-    f'fill="none" stroke="{BORDER}"/>')
-half = (W - 2*(PAD-12)) / 2
+# a rule rather than a box: the bordered panel was the only container on the
+# card, which made it heavier than anything inside it
+add(f'<line x1="{PAD}" y1="{fy}" x2="{W-PAD}" y2="{fy}" stroke="{BORDER}"/>')
+fx   = PAD + FOOT_INDENT
+half = (W - PAD - fx) / 2
 for idx, (title, items, kind) in enumerate(FOOTER):
-    cx = PAD + (idx % 2) * half
-    cy = fy + 14 + (idx // 2) * FOOT_ROW
+    cx = fx + (idx % 2) * half
+    cy = fy + 16 + (idx // 2) * FOOT_ROW
     text(cx, cy + 14, [(title, GREEN)], 12.5, "600")
     for j, segs in enumerate(items):
         yy = cy + 14 + 20 + j*F_LH
